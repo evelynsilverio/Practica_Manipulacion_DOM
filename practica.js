@@ -44,3 +44,13 @@ formTarea.addEventListener('submit', (e) => {
     listaTareas.append(card);
     inputTitulo.value = '';
 });
+
+//eliminar tareas
+listaTareas.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action="del"]');
+    if (!btn) return;
+    const card = btn.closest('.card');
+    if (!card) return;
+
+    card.remove();
+});
