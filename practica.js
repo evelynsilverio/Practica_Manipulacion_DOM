@@ -7,6 +7,8 @@ const formTarea = $('#formTarea');
 const inputTitulo = $('#inputTitulo');
 const selectTag = $('#selectTag');
 const listaTareas = $('#listaTareas');
+const filtros = $$('.chip');
+let filtroActual = 'all';
 
 const buildCard = ({title, tag}) => {
     const li = document.createElement('li');
@@ -40,6 +42,8 @@ formTarea.addEventListener('submit', (e) => {
         tag: tag
     });
     listaTareas.append(card);
+    aplicarFiltro();
+
     inputTitulo.value = '';
 });
 
@@ -85,4 +89,42 @@ listaTareas.addEventListener('click', (e) => {
     const card = btn.closest('.card');
     if (!card) return;
     marcarFavorita(card);
+});
+
+//funcion para filtrar categorias
+const aplicarFiltro = () => {
+    const cards = $$('#listaTareas .card');
+
+    cards.forEach((card) => {
+        const tag = card.dataset.tag;
+        const fav = card.dataset.fav === '1';
+
+        if (filtroActual === 'all') {
+            card.classList.remove('is-hidden');
+        }
+        else if (filtroActual === 'fav') {
+            if (fav) {
+                card.classList.remove('is-hidden');
+            } else {
+                card.classList.add('is-hidden');
+            }
+        }
+        else {
+            if (tag === filtroActual) {
+                card.classList.remove('is-hidden');
+            } else {
+                card.classList.add('is-hidden');
+            }
+        }
+    });
+};
+
+//evento para filtar categorias
+filtros.forEach((chip) => {
+    chip.addEventListener('click', () => {
+        filtroActual = chip.dataset.filter;
+        filtros.forEach(c => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+        aplicarFiltro();
+    });
 });
