@@ -13,7 +13,6 @@ const buildCard = ({title, tag}) => {
     li.className = 'card';
     li.dataset.tag = tag;
     li.dataset.fav = '0';
-
     li.innerHTML = `
         <div class="card__head">
             <span class="badge"></span>
@@ -28,7 +27,6 @@ const buildCard = ({title, tag}) => {
 
     li.querySelector('.badge').textContent = tag;
     li.querySelector('.card__title').textContent = title;
-
     return li;
 };
 
@@ -59,15 +57,32 @@ listaTareas.addEventListener('click', (e) => {
 listaTareas.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-action="done"]');
     if (!btn) return;
-
     const card = btn.closest('.card');
     if (!card) return;
 
     marcarCompletada(card);
 });
+
 //función marcar como completas
 const marcarCompletada = (card) => {
     const estado = card.dataset.done === '1';
     card.dataset.done = estado ? '0' : '1';
     card.classList.toggle('completada');
 };
+
+//funcion para marcar favorita
+const marcarFavorita = (card) => {
+    const estado = card.dataset.fav === '1';
+    card.dataset.fav = estado ? '0' : '1';
+    const btn = card.querySelector('button[data-action="fav"]');
+    btn.textContent = estado ? '☆' : '★';
+};
+
+//evento para marcar tareas como favoritas
+listaTareas.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action="fav"]');
+    if (!btn) return;
+    const card = btn.closest('.card');
+    if (!card) return;
+    marcarFavorita(card);
+});
