@@ -138,3 +138,11 @@ inputBuscar.addEventListener('input', () => {
     aplicarFiltro();
 });
 
+// limpiar búsqueda con el botón
+const btnLimpiarBuscar = $('#btnLimpiarBuscar');
+btnLimpiarBuscar.addEventListener('click', () => {
+    inputBuscar.value = '';    // para limpiar input
+    textoBusqueda = '';        // para limpiar variable de búsqueda
+    aplicarFiltro();
+});
+
