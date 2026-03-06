@@ -8,7 +8,9 @@ const inputTitulo = $('#inputTitulo');
 const selectTag = $('#selectTag');
 const listaTareas = $('#listaTareas');
 const filtros = $$('.chip');
+const inputBuscar = $('#inputBuscar');
 let filtroActual = 'all';
+let textoBusqueda = '';
 
 const buildCard = ({title, tag}) => {
     const li = document.createElement('li');
@@ -91,30 +93,31 @@ listaTareas.addEventListener('click', (e) => {
     marcarFavorita(card);
 });
 
-//funcion para filtrar categorias
+//funcion para filtrar categorias y búsqueda
 const aplicarFiltro = () => {
     const cards = $$('#listaTareas .card');
 
     cards.forEach((card) => {
         const tag = card.dataset.tag;
         const fav = card.dataset.fav === '1';
+        const title = card.querySelector('.card__title').textContent.toLowerCase();
 
-        if (filtroActual === 'all') {
-            card.classList.remove('is-hidden');
-        }
-        else if (filtroActual === 'fav') {
-            if (fav) {
+        // verificr filtro por categoria
+        let pasaFiltro = false;
+
+        if (filtroActual === 'all') pasaFiltro = true;
+        else if (filtroActual === 'fav') pasaFiltro = fav;
+        else pasaFiltro = tag === filtroActual;
+
+        //verificar busqueda por texto
+        let pasaBusqueda = true;
+        if (textoBusqueda){
+            pasaBusqueda = title.includes(textoBusqueda)
+            }
+            if (pasaFiltro && pasaBusqueda) {
                 card.classList.remove('is-hidden');
             } else {
                 card.classList.add('is-hidden');
-            }
-        }
-        else {
-            if (tag === filtroActual) {
-                card.classList.remove('is-hidden');
-            } else {
-                card.classList.add('is-hidden');
-            }
         }
     });
 };
@@ -128,3 +131,10 @@ filtros.forEach((chip) => {
         aplicarFiltro();
     });
 });
+
+//evento de búsqueda
+inputBuscar.addEventListener('input', () => {
+    textoBusqueda = inputBuscar.value.toLowerCase();
+    aplicarFiltro();
+});
+
