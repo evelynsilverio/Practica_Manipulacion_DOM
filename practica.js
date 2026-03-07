@@ -12,6 +12,7 @@ const inputBuscar = $('#inputBuscar');
 const statTotal = $('#statTotal');
 const statVisibles = $('#statVisibles');
 const statFavs = $('#statFavs');
+const emptyState = $('#emptyState');
 let filtroActual = 'all';
 let textoBusqueda = '';
 
@@ -48,8 +49,8 @@ formTarea.addEventListener('submit', (e) => {
     });
     listaTareas.append(card);
     aplicarFiltro();
-
     actualizarEstadisticas();
+    actualizarEstadoVacio();
 
     inputTitulo.value = '';
 });
@@ -63,6 +64,7 @@ listaTareas.addEventListener('click', (e) => {
 
     card.remove();
     actualizarEstadisticas();
+    actualizarEstadoVacio();
 });
 
 // marcar tareas como completadas
@@ -73,6 +75,7 @@ listaTareas.addEventListener('click', (e) => {
     if (!card) return;
 
     marcarCompletada(card);
+    actualizarEstadoVacio();
 });
 
 //función marcar como completas
@@ -137,6 +140,7 @@ filtros.forEach((chip) => {
         chip.classList.add('is-active');
         aplicarFiltro();
         actualizarEstadisticas();
+        actualizarEstadoVacio();
     });
 });
 
@@ -144,6 +148,8 @@ filtros.forEach((chip) => {
 inputBuscar.addEventListener('input', () => {
     textoBusqueda = inputBuscar.value.toLowerCase();
     aplicarFiltro();
+    actualizarEstadisticas();
+    actualizarEstadoVacio();
 });
 
 // limpiar búsqueda con el botón
@@ -153,6 +159,7 @@ btnLimpiarBuscar.addEventListener('click', () => {
     textoBusqueda = '';        // para limpiar variable de búsqueda
     aplicarFiltro();
     actualizarEstadisticas();
+    actualizarEstadoVacio();
 });
 
 // función para actualizar las estadísticas
@@ -166,4 +173,14 @@ const actualizarEstadisticas = () => {
     statTotal.textContent = total;
     statVisibles.textContent = visibles;
     statFavs.textContent = favoritas;
+};
+
+//funcion para mensaje de no hay tareas visibles
+const actualizarEstadoVacio = () => {
+    const visibles = $$('#listaTareas .card:not(.is-hidden)').length;
+    if (visibles === 0) {
+        emptyState.classList.remove('is-hidden'); //mostrar mensaje
+    } else {
+        emptyState.classList.add('is-hidden');    //ocultar mensaje
+    }
 };
