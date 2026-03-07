@@ -9,6 +9,9 @@ const selectTag = $('#selectTag');
 const listaTareas = $('#listaTareas');
 const filtros = $$('.chip');
 const inputBuscar = $('#inputBuscar');
+const statTotal = $('#statTotal');
+const statVisibles = $('#statVisibles');
+const statFavs = $('#statFavs');
 let filtroActual = 'all';
 let textoBusqueda = '';
 
@@ -46,6 +49,8 @@ formTarea.addEventListener('submit', (e) => {
     listaTareas.append(card);
     aplicarFiltro();
 
+    actualizarEstadisticas();
+
     inputTitulo.value = '';
 });
 
@@ -57,6 +62,7 @@ listaTareas.addEventListener('click', (e) => {
     if (!card) return;
 
     card.remove();
+    actualizarEstadisticas();
 });
 
 // marcar tareas como completadas
@@ -91,6 +97,7 @@ listaTareas.addEventListener('click', (e) => {
     const card = btn.closest('.card');
     if (!card) return;
     marcarFavorita(card);
+    actualizarEstadisticas();
 });
 
 //funcion para filtrar categorias y búsqueda
@@ -129,6 +136,7 @@ filtros.forEach((chip) => {
         filtros.forEach(c => c.classList.remove('is-active'));
         chip.classList.add('is-active');
         aplicarFiltro();
+        actualizarEstadisticas();
     });
 });
 
@@ -144,5 +152,18 @@ btnLimpiarBuscar.addEventListener('click', () => {
     inputBuscar.value = '';    // para limpiar input
     textoBusqueda = '';        // para limpiar variable de búsqueda
     aplicarFiltro();
+    actualizarEstadisticas();
 });
 
+// función para actualizar las estadísticas
+const actualizarEstadisticas = () => {
+    const cards = $$('#listaTareas .card');
+
+    const total = cards.length;
+    const visibles = cards.filter(c => !c.classList.contains('is-hidden')).length;
+    const favoritas = cards.filter(c => c.dataset.fav === '1').length;
+
+    statTotal.textContent = total;
+    statVisibles.textContent = visibles;
+    statFavs.textContent = favoritas;
+};
