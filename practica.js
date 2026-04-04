@@ -54,3 +54,20 @@ listaTareas.addEventListener('click', (e) => {
 
     card.remove();
 });
+
+// marcar tareas como completadas
+listaTareas.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action="done"]');
+    if (!btn) return;
+
+    const card = btn.closest('.card');
+    if (!card) return;
+
+    marcarCompletada(card);
+});
+//función marcar como completas
+const marcarCompletada = (card) => {
+    const estado = card.dataset.done === '1';
+    card.dataset.done = estado ? '0' : '1';
+    card.classList.toggle('completada');
+};
